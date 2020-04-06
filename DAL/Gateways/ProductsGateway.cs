@@ -56,8 +56,7 @@ namespace DAL.Gateways
         {
             string sqlExpression = "SELECT DISTINCT p.productId, p.name, p.categoryId, p.supplierId " +
                 "FROM Products p " +
-                "JOIN Categories c ON p.categoryId = c.categoryId " +
-                "WHERE c.categoryId = " + categoryId;
+                "WHERE p.categoryId = " + categoryId;
 
             var connection = new MyDBConnection();
             connection.OpenConnection();
@@ -85,8 +84,7 @@ namespace DAL.Gateways
         {
             string sqlExpression = "SELECT DISTINCT p.productId, p.name, p.categoryId, p.supplierId " +
                 "FROM Products p " +
-                "JOIN Suppliers s ON p.supplierId = s.supplierId " +
-                "WHERE s.supplierId = " + supplierId;
+                "WHERE p.supplierId = " + supplierId;
 
             var connection = new MyDBConnection();
             connection.OpenConnection();
