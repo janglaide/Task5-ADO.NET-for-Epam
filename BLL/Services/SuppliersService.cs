@@ -5,25 +5,43 @@ using DAL.Gateways;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace BLL.Services
 {
-    public class SuppliersService
+    public class SuppliersService : IService<SuppliersDTO>
     {
         private SuppliersGateway _gateway;
         public SuppliersService()
         {
             _gateway = new SuppliersGateway();
         }
-        public IEnumerable<string> GetSuppliersByCategory(int categoryId)   //2 query
+        public IEnumerable<SuppliersDTO> GetAll()
         {
             var mapper = new MapperConfiguration(x => x.CreateMap<Suppliers, SuppliersDTO>()).CreateMapper();
-            var list = mapper.Map<IEnumerable<Suppliers>, IEnumerable<SuppliersDTO>>(_gateway.GetSuppliersByCategory(categoryId));
-            
+            return mapper.Map<IEnumerable<Suppliers>, IEnumerable<SuppliersDTO>>(_gateway.GetAll());
+        }
+        public IEnumerable<string> GetSuppliersByCategory(int categoryId)   //2 query
+        {
+            var suppliers = GetAll();
+
+            var productService = new ProductsService();
+            var products = productService.GetAll();
+
+            var categoryService = new CategoriesService();
+            var categories = categoryService.GetAll();
+
+            var list = suppliers
+                .Join(products, s => s.Id, p => p.SupplierId,
+                (s, p) => new { catId = p.CategoryId, supName = s.Name })
+                .Join(categories, sp => sp.catId, c => c.Id,
+                (sp, c) => new { categId = c.Id, supplierName = sp.supName })
+                .Where(x => x.categId == categoryId).Distinct();
+
             var resultList = new List<string>();
             foreach(var x in list)
             {
-                resultList.Add(x.Name);
+                resultList.Add(x.supplierName);
             }
             return resultList;
         }
@@ -39,7 +57,7 @@ namespace BLL.Services
             }
             return resultList;
         }
-        public IEnumerable<string> GetSuppliersAll()
+        public IEnumerable<string> GetAllNames()
         {
             var mapper = new MapperConfiguration(x => x.CreateMap<Suppliers, SuppliersDTO>()).CreateMapper();
             var list = mapper.Map<IEnumerable<Suppliers>, IEnumerable<SuppliersDTO>>(_gateway.GetAll());

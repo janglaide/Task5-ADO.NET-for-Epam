@@ -49,7 +49,7 @@ namespace App
         static void Case1()
         {
             var categoriesService = new CategoriesService();
-            var categories = categoriesService.GetCategoriesAll();
+            var categories = categoriesService.GetAllNames();
             var i = 0;
             foreach (var x in categories)
             {
@@ -81,7 +81,7 @@ namespace App
         static void Case2()
         {
             var categoriesService = new CategoriesService();
-            var categories = categoriesService.GetCategoriesAll();
+            var categories = categoriesService.GetAllNames();
 
             var i = 0;
             foreach (var x in categories)
@@ -114,7 +114,7 @@ namespace App
         static void Case3()
         {
             var suppliersService = new SuppliersService();
-            var suppliers = suppliersService.GetSuppliersAll();
+            var suppliers = suppliersService.GetAllNames();
             var i = 0;
             foreach (var x in suppliers)
             {

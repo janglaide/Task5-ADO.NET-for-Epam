@@ -48,34 +48,7 @@ namespace DAL.Gateways
 
             return new Suppliers(id, (string)ds.Tables[0].Rows[0].ItemArray[1]);
         }
-        public IEnumerable<Suppliers> GetSuppliersByCategory(int categoryId)    //2 query
-        {
-            string sqlExpression = "SELECT DISTINCT s.supplierId, s.name " +
-                "FROM Suppliers s " +
-                "JOIN Products p ON s.supplierId = p.supplierId " +
-                "JOIN Categories c ON p.categoryId = c.categoryId " +
-                "WHERE c.categoryId = " + categoryId;
-
-            var connection = new MyDBConnection();
-            connection.OpenConnection();
-
-            SqlDataAdapter adapter = new SqlDataAdapter(sqlExpression, connection.Connection);
-            var ds = new DataSet();
-            adapter.Fill(ds);
-
-            connection.CloseConnection();
-
-            var list = new List<Suppliers>();
-
-            foreach (DataRow x in ds.Tables[0].Rows)
-            {
-                var id = x.ItemArray[0];
-                var name = x.ItemArray[1];
-
-                list.Add(new Suppliers((int)id, (string)name));
-            }
-            return list;
-        }
+        
         public IEnumerable<Suppliers> GetSuppliersByMaxCategory(ref int counted)    //4 query
         {
             var connection = new MyDBConnection();

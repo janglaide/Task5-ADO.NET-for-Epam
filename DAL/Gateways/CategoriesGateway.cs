@@ -9,7 +9,6 @@ namespace DAL.Gateways
 {
     public class CategoriesGateway : IGateway<Categories>
     {
-
         public IEnumerable<Categories> GetAll()
         {
             var sqlExpression = "SELECT * FROM Categories";
