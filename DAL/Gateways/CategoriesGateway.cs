@@ -36,12 +36,16 @@ namespace DAL.Gateways
 
         public Categories GetById(int id)
         {
-            var sqlExpression = "SELECT * FROM Categories WHERE categoryId = " + id.ToString();
-
             var connection = new MyDBConnection();
             connection.OpenConnection();
 
-            SqlDataAdapter adapter = new SqlDataAdapter(sqlExpression, connection.Connection);
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand("SELECT * FROM Categories WHERE categoryId = @id",
+                connection.Connection);
+
+            var idParam = new SqlParameter("@id", id);
+            adapter.SelectCommand.Parameters.Add(idParam);
+
             var ds = new DataSet();
             adapter.Fill(ds);
 

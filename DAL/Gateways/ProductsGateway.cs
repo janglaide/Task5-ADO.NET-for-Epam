@@ -38,12 +38,17 @@ namespace DAL.Gateways
 
         public Products GetById(int id)
         {
-            var sqlExpression = "SELECT * FROM Products WHERE productId = " + id.ToString();
-
             var connection = new MyDBConnection();
             connection.OpenConnection();
 
-            SqlDataAdapter adapter = new SqlDataAdapter(sqlExpression, connection.Connection);
+            SqlDataAdapter adapter = new SqlDataAdapter();
+
+            adapter.SelectCommand = new SqlCommand("SELECT * FROM Products WHERE productId = @id",
+                connection.Connection);
+
+            var idParam = new SqlParameter("@id", id);
+            adapter.SelectCommand.Parameters.Add(idParam);
+
             var ds = new DataSet();
             adapter.Fill(ds);
 
